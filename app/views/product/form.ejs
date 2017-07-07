@@ -1,0 +1,21 @@
+<% if (error) { %>
+    <p><%= error %></p>
+<% } %>
+<form action="/products/save" method="post">
+    <% if (product.id) {%>
+    <input type="hidden" value="<% product.id%>">
+    <% } %>
+    <fieldset>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="<%=product.title%>">
+    </fieldset>
+    <fieldset>
+        <label for="sku">SKU</label>
+        <input type="text" id="sku" name="sku" value="<%=product.sku%>">
+    </fieldset>
+    <fieldset>
+        <label for="price">Price</label>
+        <input type="text" id="price" name="price" value="<%=product.price%>">
+    </fieldset>
+    <button>Create</button>
+</form>
