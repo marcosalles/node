@@ -3,14 +3,14 @@ function BaseDao(database) {
 	this['db'] = database;
 }
 
-BaseDao.prototype.query = function (query, entity, callback) {
+BaseDao.prototype.query = function (query, params, callback) {
 	let connection = this['db'].createConnection({
 		host: 'localhost',
 		database: 'cdcnode',
 		user: 'root',
 		password: ''
 	});
-	connection.query(query, entity, callback);
+	connection.query(query, params, callback);
 	connection.on('error', function(error) {});
 	connection.end();
 }

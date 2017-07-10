@@ -1,24 +1,55 @@
 function ProductController(app) {
 	const products = app.daos.ProductDao;
+	const self = this;
 
-	app.get(this.list(), function (req, res) {
-		products.all(function(error, result) {
+	app.get(self.list(), function (req, res) {
+		products.all(function (error, result) {
 			const productList = result;
-			res.render('product/list', {products: productList});
+			res.format({
+				html: function () {
+					res.render('product/list', {page: {products: productList}});
+				},
+				json: function () {
+					res.json(productList);
+				}
+			});
+
 		});
 	});
 
-	app.get(this.form(), function (req, res) {
-		console.log('id: ',req.get('id'));
-		const product = {};
-		res.render('product/form', {product: product, error: undefined});
+	app.get(self.form(), function (req, res) {
+		const id = req.query.id;
+		products.load(id, function(error, result) {
+			let product = {};
+			if (result) {
+				product = result[0];
+			}
+			res.render('product/form', {page: {product:product}});
+		});
 	});
 
-	app.post(this.save(), function (req, res) {
+	app.post(self.save(), function (req, res) {
 		const product = req.body;
-		products.save(product, function(error, result) {
-			if (error) res.render('product/form', {product: product, error: error});
-			if (result) res.redirect(this.list());
+		req.assert('title', 'Title can\' be empty').notEmpty();
+
+		const validationErrors = req.validationErrors();
+		if (validationErrors) {
+			console.log(validationErrors);
+			res.render('product/form', {page: {product: product, errors: validationErrors}});
+			return;
+		}
+		products.save(product, function (error, result) {
+			if (error) res.render('product/form', {page: {product: product, errors: error}});
+			if (result) res.redirect(self.list());
+		});
+	});
+
+	app.delete(self.delete(), function (req, res) {
+		console.log("deleting! controller");
+		const id = req.body.id;
+		products.delete(id, function(error, result) {
+			console.log(error, result);
+			res.redirect(self.list());
 		});
 	});
 }
@@ -35,8 +66,11 @@ ProductController.prototype.form = function () {
 ProductController.prototype.save = function () {
 	return this.path('/save');
 }
+ProductController.prototype.delete = function () {
+	return this.path('/');
+}
 
 
-module.exports = function(app) {
-	new ProductController(app);
+module.exports = function (app) {
+	return new ProductController(app);
 }

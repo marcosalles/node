@@ -7,5 +7,5 @@ function UserController(app) {
 }
 
 module.exports = function(app) {
-	new UserController(app);
+	return new UserController(app);
 }
