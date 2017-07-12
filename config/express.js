@@ -11,7 +11,8 @@ module.exports = function() {
 	app.use(bodyParser.json());
 	app.use(validator());
 
-	load('daos', {cwd: 'app'})
+	load('models', {cwd: 'app'})
+		.then('daos')
 		.then('controllers')
 		.into(app);
 	return app;

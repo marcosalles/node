@@ -1,21 +1,27 @@
+<html>
+<body>
+<h1>Produtos</h1>
+<% for (i in errors) {
+    let error = errors[i]; %>
+    <spam><%=error.msg%></spam>
+<% } %>
 <form action="/products/save" method="post">
-    <% if (page.product.id) {%>
-    <input type="hidden" value="<% page.product.id%>">
+    <% if (product) { %>
+    <input type="hidden" name="id" value="<%=product.id%>">
     <% } %>
     <fieldset>
         <label for="title">Title</label>
-        <input type="text" id="title" name="title" value="<%=page.product.title%>">
-        <% if (page.errors) { %>
-        <spam><%=page.errors[0].msg%></spam>
-        <% } %>
+        <input type="text" id="title" name="title" value="<%=product.title%>">
     </fieldset>
     <fieldset>
         <label for="sku">SKU</label>
-        <input type="text" id="sku" name="sku" value="<%=page.product.sku%>">
+        <input type="text" id="sku" name="sku" value="<%=product.sku%>">
     </fieldset>
     <fieldset>
         <label for="price">Price</label>
-        <input type="text" id="price" name="price" value="<%=page.product.price%>">
+        <input type="text" id="price" name="price" value="<%=product.price%>">
     </fieldset>
     <button>Create</button>
 </form>
+</body>
+</html>

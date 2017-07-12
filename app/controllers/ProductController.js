@@ -1,5 +1,6 @@
 function ProductController(app) {
 	const products = app.daos.ProductDao;
+	const Product = app.models.Product;
 	const self = this;
 
 	app.get(self.list(), function (req, res) {
@@ -7,7 +8,7 @@ function ProductController(app) {
 			const productList = result;
 			res.format({
 				html: function () {
-					res.render('product/list', {page: {products: productList}});
+					res.render('product/list', {products: productList});
 				},
 				json: function () {
 					res.json(productList);
@@ -20,26 +21,26 @@ function ProductController(app) {
 	app.get(self.form(), function (req, res) {
 		const id = req.query.id;
 		products.load(id, function(error, result) {
-			let product = {};
-			if (result) {
+			let product = new Product();
+			if (result && result[0]) {
 				product = result[0];
 			}
-			res.render('product/form', {page: {product:product}});
+			res.render('product/form', {product:product, errors:null});
 		});
 	});
 
 	app.post(self.save(), function (req, res) {
 		const product = req.body;
+		console.log("product: ", product);
 		req.assert('title', 'Title can\' be empty').notEmpty();
 
 		const validationErrors = req.validationErrors();
 		if (validationErrors) {
-			console.log(validationErrors);
-			res.render('product/form', {page: {product: product, errors: validationErrors}});
+			res.render('product/form', {product: product, errors: validationErrors});
 			return;
 		}
 		products.save(product, function (error, result) {
-			if (error) res.render('product/form', {page: {product: product, errors: error}});
+			if (error) res.render('product/form', {product: product, errors: error});
 			if (result) res.redirect(self.list());
 		});
 	});
