@@ -25,22 +25,22 @@ function ProductController(app) {
 			if (result && result[0]) {
 				product = result[0];
 			}
-			res.render('product/form', {product:product, errors:null});
+			res.render('product/form', {product: product, errors: []});
 		});
 	});
 
 	app.post(self.save(), function (req, res) {
 		const product = req.body;
-		console.log("product: ", product);
-		req.assert('title', 'Title can\' be empty').notEmpty();
+		req.assert('title', 'Title can\'t be empty').notEmpty();
+		req.assert('sku', 'SKU can\'t be empty').notEmpty();
 
 		const validationErrors = req.validationErrors();
 		if (validationErrors) {
-			res.render('product/form', {product: product, errors: validationErrors});
+			res.status(400).render('product/form', {product: product, errors: validationErrors});
 			return;
 		}
 		products.save(product, function (error, result) {
-			if (error) res.render('product/form', {product: product, errors: error});
+			if (error) res.status(400).render('product/form', {product: product, errors: [error]});
 			if (result) res.redirect(self.list());
 		});
 	});
