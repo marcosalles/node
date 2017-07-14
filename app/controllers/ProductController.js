@@ -3,9 +3,12 @@ function ProductController(app) {
 	const Product = app.models.Product;
 	const self = this;
 
-	app.get(self.list(), function (req, res) {
+	app.get(self.list(), function (req, res, next) {
 		products.all(function (error, result) {
-			const productList = result;
+			if (error) {
+				return next(error);
+			}
+			const productList = result || [];
 			res.format({
 				html: function () {
 					res.render('product/list', {products: productList});
