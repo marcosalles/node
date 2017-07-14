@@ -1,7 +1,18 @@
-function ProductControllerTest(request) {
+function ProductControllerTest(request, databaseCleaner) {
+	console.log(databaseCleaner);
 	const product = this.product();
 
 	describe('ProductController', function () {
+
+		afterEach(function (done) {
+			databaseCleaner.cleanAll(function (error, result) {
+				if (!error) {
+					done();
+				} else {
+					console.log(error);
+				}
+			});
+		});
 
 		it('should list products as json', function (done) {
 			request.get('/products')
@@ -29,6 +40,6 @@ ProductControllerTest.prototype.product = function () {
 	};
 };
 
-module.exports = function (request) {
-	return new ProductControllerTest(request);
+module.exports = function (request, databaseCleaner) {
+	return new ProductControllerTest(request, databaseCleaner);
 };

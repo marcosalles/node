@@ -1,28 +1,33 @@
 const mysql = require('mysql');
-function BaseDao(database, env) {
+function BaseDao(database, databaseName) {
 	this['db'] = database;
-	this['env'] = env;
+	this['databaseName'] = databaseName;
 }
 
-BaseDao.prototype.connect = function (env) {
-	const suffix = [env?'_':null, env].join('');
-	this['db'].createConnection({
+BaseDao.prototype.connect = function () {
+	return this['db'].createConnection({
+		database: this.name(),
 		host: 'localhost',
-		database: 'cdcnode'+suffix,
 		user: 'root',
 		password: ''
 	});
 };
 BaseDao.prototype.query = function (query, params, callback) {
-	let connection = connect(this['env']);
+	const connection = this.connect(this['env']);
 	connection.query(query, params, callback);
 	connection.on('error', function(error) {});
 	connection.end();
+};
+BaseDao.prototype.name = function () {
+	return this['databaseName'];
 };
 
 module.exports = function() {
 	const env = process.env.NODE_ENV;
 	console.info("Using environment", (env || 'development').toUpperCase());
 
-	return new BaseDao(mysql, env);
+	const suffix = [env?'_':null, env].join('');
+	const databaseName = 'cdcnode'+suffix;
+
+	return new BaseDao(mysql, databaseName);
 };
