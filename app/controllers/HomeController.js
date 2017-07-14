@@ -1,8 +1,10 @@
 function HomeController(app) {
-	const productController = app.controllers.ProductController;
+	const products = app.daos.ProductDao;
 
 	app.get('/', function (req, res) {
-		res.render('home/home', {title: 'Ayoo silver'});
+		products.all(function (error, products) {
+			res.render('home/home', {products:products});
+		});
 	});
 }
 

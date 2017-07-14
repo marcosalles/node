@@ -1,6 +1,7 @@
 <html>
 <body>
 <h1>Produtos</h1>
+<% console.log(errors); %>
 <% if (errors.length > 0) { %>
 <div>
     <ul>
@@ -12,7 +13,9 @@
 </div>
 <% } %>
 <form action="/products/save" method="post">
-    <input type="hidden" name="id" value="<%=product.id%>">
+    <% if (product.id) { %>
+        <input type="hidden" name="id" value="<%=product.id%>">
+    <% } %>
     <fieldset>
         <label for="title">Title</label>
         <input type="text" id="title" name="title" value="<%=product.title%>">

@@ -4,17 +4,16 @@ function ProductController(app) {
 	const self = this;
 
 	app.get(self.list(), function (req, res, next) {
-		products.all(function (error, result) {
+		products.all(function (error, products) {
 			if (error) {
 				return next(error);
 			}
-			const productList = result || [];
 			res.format({
 				html: function () {
-					res.render('product/list', {products: productList});
+					res.render('product/list', {products: products || []});
 				},
 				json: function () {
-					res.json(productList);
+					res.json(products || []);
 				}
 			});
 
@@ -23,10 +22,10 @@ function ProductController(app) {
 
 	app.get(self.form(), function (req, res) {
 		const id = req.query.id;
-		products.load(id, function(error, result) {
+		products.load(id, function (error, form) {
 			let product = new Product();
-			if (result && result[0]) {
-				product = result[0];
+			if (form && form[0]) {
+				product = form[0];
 			}
 			res.render('product/form', {product: product, errors: []});
 		});
@@ -37,20 +36,27 @@ function ProductController(app) {
 		req.assert('title', 'Title can\'t be empty').notEmpty();
 		req.assert('sku', 'SKU can\'t be empty').notEmpty();
 
-		const validationErrors = req.validationErrors();
-		if (validationErrors) {
-			res.status(400).render('product/form', {product: product, errors: validationErrors});
-			return;
-		}
-		products.save(product, function (error, result) {
-			if (error) res.status(400).render('product/form', {product: product, errors: [error]});
-			if (result) res.redirect(self.list());
+		req.getValidationResult().then(function (validation) {
+			if (validation.isEmpty()) {
+				products.save(product, function (error) {
+					if (error) {
+						let errors = [{msg: error}];
+						res.status(400).render('product/form', {product: product, errors: errors});
+					}
+					else {
+						res.redirect(self.list());
+					}
+				});
+			}
+			else {
+				res.status(400).render('product/form', {product: product, errors: validation.array()});
+			}
 		});
 	});
 
 	app.get(self.delete(), function (req, res, next) {
 		const id = req.query.id;
-		products.delete(id, function(error, result) {
+		products.delete(id, function (error) {
 			if (error) {
 				return next(error);
 			}
