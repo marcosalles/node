@@ -21,6 +21,7 @@ function ProductControllerTest(request, databaseCleaner, productDao) {
 				.expect('Content-Type', /application\/json/)
 				.end(done);
 		});
+
 		it('should access product list in html', function (done) {
 			request.get('/products')
 				.expect(200)

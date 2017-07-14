@@ -1,9 +1,12 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 const load = require('express-load');
 const validator = require('express-validator');
 
 module.exports = function() {
+	app.use(express.static('app/public'));
+
 	app.set('view engine', 'ejs');
 	app.set('views', 'app/views')
 
