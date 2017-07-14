@@ -48,11 +48,12 @@ function ProductController(app) {
 		});
 	});
 
-	app.delete(self.delete(), function (req, res) {
-		console.log("deleting! controller");
-		const id = req.body.id;
+	app.get(self.delete(), function (req, res, next) {
+		const id = req.query.id;
 		products.delete(id, function(error, result) {
-			console.log(error, result);
+			if (error) {
+				return next(error);
+			}
 			res.redirect(self.list());
 		});
 	});
@@ -71,7 +72,7 @@ ProductController.prototype.save = function () {
 	return this.path('/save');
 }
 ProductController.prototype.delete = function () {
-	return this.path('/');
+	return this.path('/delete');
 }
 
 

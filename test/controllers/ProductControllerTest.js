@@ -1,6 +1,6 @@
-function ProductControllerTest(request, databaseCleaner) {
-	console.log(databaseCleaner);
-	const product = this.product();
+function ProductControllerTest(request, databaseCleaner, productDao) {
+	const self = this;
+	const products = productDao;
 
 	describe('ProductController', function () {
 
@@ -14,19 +14,36 @@ function ProductControllerTest(request, databaseCleaner) {
 			});
 		});
 
-		it('should list products as json', function (done) {
+		it('should access product list in json', function (done) {
 			request.get('/products')
 				.set('Accept', 'application/json')
 				.expect(200)
 				.expect('Content-Type', /application\/json/)
 				.end(done);
 		});
+		it('should access product list in html', function (done) {
+			request.get('/products')
+				.expect(200)
+				.expect('Content-Type', /text\/html/)
+				.end(done);
+		});
 
 		it('should create a new product', function (done) {
 			request.post('/products/save')
-				.send(product)
+				.send(self.product())
 				.expect(302)
 				.end(done);
+		});
+
+		it('should delete a product', function (done) {
+			products.save(self.product(), function (error, result) {
+				if (!error) {
+					request.get('/products/delete')
+						.send({id: result.insertId})
+						.expect(302)
+						.end(done);
+				}
+			});
 		});
 
 	});
@@ -40,6 +57,6 @@ ProductControllerTest.prototype.product = function () {
 	};
 };
 
-module.exports = function (request, databaseCleaner) {
-	return new ProductControllerTest(request, databaseCleaner);
+module.exports = function (request, databaseCleaner, productDao) {
+	return new ProductControllerTest(request, databaseCleaner, productDao);
 };

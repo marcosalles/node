@@ -8,7 +8,7 @@
         <th>Title</th>
         <th>Price</th>
         <th></th>
-        <!--<th></th>-->
+        <th></th>
     </tr>
     <% for (i in products) {
     	let product = products[i]; %>
@@ -18,12 +18,7 @@
         <td><%= product.title %></td>
         <td><%= product.price %></td>
         <td><a href="/products/form?id=<%=product.id%>">Edit</a></td>
-        <!--<td>
-            <form action="/products" method="DELETE">
-                <input type="hidden" name="id" value="<%=product.id%>">
-                <button type="submit">Delete</button>
-            </form>
-        </td>-->
+        <td><a href="/products/delete?id=<%=product.id%>">Delete</a></td>
     </tr>
     <% } %>
 </table>

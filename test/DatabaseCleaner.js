@@ -3,7 +3,6 @@ function DatabaseCleaner(database) {
 }
 
 DatabaseCleaner.prototype.clean = function(table, callback) {
-	console.log("table: ",table);
 	const db = this['database'];
 
 	db.query('set foreign_key_checks = 0');
