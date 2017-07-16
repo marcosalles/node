@@ -18,5 +18,16 @@ module.exports = function() {
 		.then('daos')
 		.then('controllers')
 		.into(app);
+
+	app.use(function(req, res, next) {
+		res.status(404).render("error/404");
+		return next();
+	});
+
+	app.use(function(error, req, res, next) {
+		res.status(500).render('error/500', {error: error});
+		return next(error);
+	});
+
 	return app;
 }

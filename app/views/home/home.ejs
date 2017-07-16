@@ -253,7 +253,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 	io().on('promotion',function(promotion) {
-        console.log(promotion);
         const message = promotion.text+"\n"+promotion.product.title+" "+promotion.percent+"% off!";
 		alert(message);
 	});

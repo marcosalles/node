@@ -10,7 +10,6 @@ function PromotionController(app) {
 
 	app.post(self.change(), function (req, res, next) {
 		const promotion = req.body;
-		console.log(promotion);
 		products.load(promotion.product.id, function (error, products) {
 			if (error) {
 				return next(error);
