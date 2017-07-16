@@ -1,6 +1,10 @@
-var app = require('./config/express')();
+const app = require('./config/express')();
+const http = require('http').Server(app);
 
-app.listen(3000, function () {
-  console.log("Server started")
+app.io = require('socket.io')(http);
+
+const port = process.env.PORT || 3000;
+const server = http.listen(port, function () {
+	console.log("Server started!");
 });
 

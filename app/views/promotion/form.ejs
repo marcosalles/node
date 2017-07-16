@@ -1,0 +1,15 @@
+<html>
+<body>
+<form action="/promotions/change" method="post">
+    <input type="text" name="text">
+    <select name="product[id]">
+        <% for (i in products) { %>
+            <% let product = products[i]; %>
+            <option value="<%=product.id%>"><%=product.title%></option>
+        <% } %>
+    </select>
+    <input type="number" min="10" max="80" step="5" name="percent">
+    <button>Promote!</button>
+</form>
+</body>
+</html>

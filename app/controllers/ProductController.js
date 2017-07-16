@@ -65,11 +65,11 @@ function ProductController(app) {
 	});
 }
 
-ProductController.prototype.path = function (path) {
-	return "/products" + ( path ? path : '');
+ProductController.prototype.path = function (path = '') {
+	return "/products" + path;
 }
 ProductController.prototype.list = function () {
-	return this.path('/');
+	return this.path();
 }
 ProductController.prototype.form = function () {
 	return this.path('/form');

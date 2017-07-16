@@ -19,7 +19,6 @@ ProductDao.prototype.save = function (product, callback) {
 }
 
 ProductDao.prototype.delete = function (id, callback) {
-	console.log("deleting...");
 	this['base'].query('delete from product where id = ?', [id], callback);
 }
 
