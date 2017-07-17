@@ -15,6 +15,7 @@ module.exports = function() {
 	app.use(validator());
 
 	load('models', {cwd: 'app'})
+		.then('daos/Database')
 		.then('daos')
 		.then('controllers')
 		.into(app);
