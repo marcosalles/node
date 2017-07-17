@@ -3,7 +3,7 @@ function PromotionController(app) {
 	const products = app.daos.ProductDao;
 
 	self.form = '/promotions/form';
-	self.change = 'promotions/change';
+	self.change = '/promotions/change';
 
 	app.get(self.form, function (req, res, next) {
 		products.all(function (error, products) {
